@@ -437,7 +437,7 @@ describe("WalletProvider and account change detection", () => {
     );
 
     expect(await screen.findByText(`User: ${ADDRESS_A}`)).toBeTruthy();
-    expect(loadMock).toHaveBeenCalledWith(ADDRESS_A);
+    await waitFor(() => expect(loadMock).toHaveBeenCalledWith(ADDRESS_A));
 
     // Mock account switch in extension
     mockKit.getAddress.mockResolvedValue({ address: ADDRESS_B });
@@ -447,7 +447,7 @@ describe("WalletProvider and account change detection", () => {
     });
 
     expect(await screen.findByText(`User: ${ADDRESS_B}`)).toBeTruthy();
-    expect(loadMock).toHaveBeenCalledWith(ADDRESS_B);
+    await waitFor(() => expect(loadMock).toHaveBeenCalledWith(ADDRESS_B));
   });
 
   it("handles wallet getAddress error gracefully on focus without clearing state", async () => {

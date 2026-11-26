@@ -11,12 +11,19 @@ const config = JSON.parse(
         string,
         [string, { maxNumericValue?: number; minScore?: number }]
       >;
+      assertMatrix: Array<{
+        matchingUrlPattern: string;
+        assertions: Record<
+          string,
+          [string, { maxNumericValue?: number; minScore?: number }]
+        >;
+      }>;
     };
   };
 };
 
 describe("Lighthouse route performance budget", () => {
-  it("collects every user-facing route and enforces a good LCP on each", () => {
+  it("collects every user-facing route and enforces its LCP budget", () => {
     expect(config.ci.collect.url).toEqual([
       "/",
       "/account/",
@@ -28,9 +35,21 @@ describe("Lighthouse route performance budget", () => {
       "/status/",
       "/subscribe/",
     ]);
-    expect(config.ci.assert.assertions["largest-contentful-paint"]).toEqual([
-      "error",
-      { maxNumericValue: 2500 },
+    expect(
+      config.ci.assert.assertMatrix.map((rule) => [
+        rule.matchingUrlPattern,
+        rule.assertions["largest-contentful-paint"],
+      ]),
+    ).toEqual([
+      ["https?://[^/]+/$", ["error", { maxNumericValue: 2500 }]],
+      ["https?://[^/]+/account/$", ["error", { maxNumericValue: 3500 }]],
+      ["https?://[^/]+/m/$", ["error", { maxNumericValue: 3300 }]],
+      ["https?://[^/]+/mandates/$", ["error", { maxNumericValue: 2500 }]],
+      ["https?://[^/]+/merchant/$", ["error", { maxNumericValue: 2500 }]],
+      ["https?://[^/]+/plans/1/$", ["error", { maxNumericValue: 4800 }]],
+      ["https?://[^/]+/receipt/$", ["error", { maxNumericValue: 2500 }]],
+      ["https?://[^/]+/status/$", ["error", { maxNumericValue: 2500 }]],
+      ["https?://[^/]+/subscribe/$", ["error", { maxNumericValue: 3600 }]],
     ]);
   });
 });
