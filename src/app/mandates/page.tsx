@@ -489,8 +489,11 @@ function MandateDetailsInner() {
             <table className="w-full text-left text-sm">
               <thead className="border-b border-edge text-xs uppercase text-muted">
                 <tr>
-                  <th className="py-2 pr-4">{tr("Ledger")}</th>
+                  <th className="py-2 pe-4">{tr("Ledger")}</th>
                   <th className="py-2 px-4">{tr("Charge #")}</th>
+                  <th className="py-2 px-4">{tr("Amount")}</th>
+                  <th className="py-2 px-4">{tr("Fee")}</th>
+                  <th className="py-2 ps-4">{tr("Transaction")}</th>
                   <th className="py-2 px-4 text-right">{tr("Amount")}</th>
                   <th className="py-2 px-4 text-right">{tr("Fee")}</th>
                   <th className="py-2 pl-4">{tr("Transaction")}</th>
@@ -499,7 +502,7 @@ function MandateDetailsInner() {
               <tbody className="divide-y divide-edge">
                 {visibleCharges.map((c) => (
                   <tr key={c.tx_hash} className="hover:bg-surface/50">
-                    <td className="py-3 pr-4 tabular-nums">
+                    <td className="py-3 pe-4 tabular-nums">
                       #{c.ledger}
                     </td>
                     <td className="py-3 px-4 tabular-nums">
@@ -511,7 +514,7 @@ function MandateDetailsInner() {
                     <td className="py-3 px-4 text-right font-mono tabular-nums text-muted">
                       {formatTokenValue(c.fee, 4, tokenMeta.decimals)} {tokenMeta.symbol}
                     </td>
-                    <td className="py-3 pl-4">
+                    <td className="py-3 ps-4">
                       <TxLink hash={c.tx_hash} />
                     </td>
                   </tr>

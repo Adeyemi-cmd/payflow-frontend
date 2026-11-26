@@ -1606,7 +1606,7 @@ function AccountInner() {
                     <span className="mono text-xs text-muted">{tr("tx")}</span>
                     <TxLink hash={event.tx_hash} />
                   </div>
-                  <div className="text-right">
+                  <div className="text-end">
                     <Money
                       amount={isCredit ? event.amount : `-${event.amount}`}
                       meta={vaultMeta}

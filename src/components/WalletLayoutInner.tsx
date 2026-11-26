@@ -73,7 +73,7 @@ function NetworkSwitcher({
   return (
     <span className="relative inline-flex items-center">
       <span
-        className="pointer-events-none absolute left-2.5 h-2 w-2 rounded-full bg-accent"
+        className="pointer-events-none absolute start-2.5 h-2 w-2 rounded-full bg-accent"
         aria-hidden="true"
       />
       <label className="sr-only" htmlFor="network-switcher">
@@ -81,7 +81,7 @@ function NetworkSwitcher({
       </label>
       <select
         id="network-switcher"
-        className="h-9 appearance-none rounded-lg border border-edge bg-transparent pl-7 pr-7 text-xs text-muted transition hover:border-muted hover:text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+        className="h-9 appearance-none rounded-lg border border-edge bg-transparent ps-7 pe-7 text-xs text-muted transition hover:border-muted hover:text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
         value={network.id}
         onChange={(event) => select(event.target.value)}
         title={tr("Network: {0} — switch and reload", { "0": network.label })}
@@ -99,7 +99,7 @@ function NetworkSwitcher({
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="pointer-events-none absolute right-2 h-3.5 w-3.5 text-muted"
+        className="pointer-events-none absolute end-2 h-3.5 w-3.5 text-muted"
         aria-hidden="true"
       >
         <path d="m6 9 6 6 6-6" />

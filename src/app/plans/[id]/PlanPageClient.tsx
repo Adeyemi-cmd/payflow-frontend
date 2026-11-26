@@ -221,12 +221,12 @@ export function PlanPageClient({ planId }: PlanPageClientProps) {
             <table className="w-full text-sm">
               <thead>
                 <tr>
-                  <th className="text-muted text-left">{tr("Mandate")}</th>
-                  <th className="text-muted text-left">{tr("Subscriber")}</th>
-                  <th className="text-muted text-right">{tr("Amount")}</th>
-                  <th className="text-muted text-right">{tr("Fee")}</th>
-                  <th className="text-muted text-right">{tr("Net")}</th>
-                  <th className="text-muted text-left">{tr("Tx hash")}</th>
+                  <th className="text-muted text-start">{tr("Mandate")}</th>
+                  <th className="text-muted text-start">{tr("Subscriber")}</th>
+                  <th className="text-muted text-end">{tr("Amount")}</th>
+                  <th className="text-muted text-end">{tr("Fee")}</th>
+                  <th className="text-muted text-end">{tr("Net")}</th>
+                  <th className="text-muted text-start">{tr("Tx hash")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -236,6 +236,10 @@ export function PlanPageClient({ planId }: PlanPageClientProps) {
                     <td className="py-2">
                       <AddressDisplay value={c.subscriber} />
                     </td>
+                    <td className="py-2 text-end">{c.amount}{" "}{tr("XLM")}</td>
+                    <td className="py-2 text-end">{c.fee}{" "}{tr("XLM")}</td>
+                    <td className="py-2 text-end">{c.net}{" "}{tr("XLM")}</td>
+                    <td className="py-2 text-end">
                     <td className="py-2 text-right font-mono tabular-nums">{c.amount}{" "}{tr("XLM")}</td>
                     <td className="py-2 text-right font-mono tabular-nums">{c.fee}{" "}{tr("XLM")}</td>
                     <td className="py-2 text-right font-mono tabular-nums">{c.net}{" "}{tr("XLM")}</td>

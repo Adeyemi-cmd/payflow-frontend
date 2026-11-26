@@ -573,6 +573,26 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       setSignError(null);
       setLocked(false);
       try {
+        const kit = await getKit();
+
+        // Wallet extensions can change networks without changing accounts. Read
+        // the active network immediately before signing instead of trusting the
+        // value captured when the session was restored or connected.
+        let activeNetwork: string | null = null;
+        try {
+          const { networkPassphrase } = await kit.getNetwork();
+          activeNetwork = networkPassphrase;
+          setWalletNetwork(networkPassphrase);
+        } catch {
+          // Preserve the established behavior for wallets without getNetwork.
+        }
+        if (
+          checkNetworkMismatch(activeNetwork) ||
+          (!activeNetwork && networkMismatch)
+        ) {
+          throw new Error("Switch your wallet to the correct network first.");
+        }
+
         // Re-read the address before signing. If the user switched accounts
         // in the wallet extension popup, the prepared transaction was built
         // for the previous address. Signing it would fail verification or act
@@ -595,6 +615,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
           throw new Error(ACCOUNT_CHANGED_ERROR);
         }
 
+        // Explain what the transaction does before the wallet extension opens,
+        // so the reader can back out without ever handing the XDR to the wallet.
         if (description) await requestSigningConfirmation(description);
 
         // translateSignatureError always throws: it replaces a cancellation

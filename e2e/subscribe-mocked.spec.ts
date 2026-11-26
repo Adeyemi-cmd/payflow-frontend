@@ -18,6 +18,7 @@ interface SetupOptions extends MockRpcOptions {
 }
 
 async function setup(page: Page, options: SetupOptions = {}): Promise<MockRpc> {
+  const rpc = await installMockRpc(page, options.subscribe === undefined ? {} : { subscribe: options.subscribe });
   const rpc = await installMockRpc(
     page,
     options.subscribe !== undefined ? { subscribe: options.subscribe } : {},
