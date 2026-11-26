@@ -77,7 +77,8 @@ import { OnboardingChecklist } from "@/components/OnboardingChecklist";
 import { SectionShortcuts } from "@/components/SectionShortcuts";
 import { AddressLink, Badge, Empty, InlineError, Notice, Panel, SkeletonRows, Stat, TimeAgo, TxLink } from "@/components/ui";
 import { Search } from "@/components/Search";
-import { ConfirmDialog, confirmTitle } from "@/components/ConfirmDialog";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
+import { confirmTitle } from "@/lib/confirm-title";
 import { DiscountForm } from "@/components/DiscountForm";
 import { InfoTip } from "@/components/Tooltip";
 import { observeContractRecord } from "@/lib/contract-compat";
@@ -1400,7 +1401,7 @@ export default function MerchantPage() {
     if (loadedPlans.length > 0) {
       void Promise.all(
         loadedPlans.map(async (plan) => {
-          const apiStats = await api.planStats(plan.id);
+          const apiStats = typeof api.planStats === "function" ? await api.planStats(plan.id) : null;
           if (apiStats !== null) {
             setPlanStats((prev) => ({ ...prev, [plan.id]: apiStats }));
             return;
@@ -2020,26 +2021,30 @@ export default function MerchantPage() {
 
   if (!address) {
     return (
-      <Panel title={tr("Merchant dashboard")}>
-        <Empty
-          title={tr("No wallet connected")}
-          action={
-            <button
-              type="button"
-              className="btn-primary"
-              disabled={connecting}
-              onClick={() => void connect()}
-            >
-              {connecting ?tr("Connecting…") :tr("Connect wallet")}
-            </button>
-          }
-        >{tr("Connect the wallet that will publish plans. Plans, subscribers and revenue are all read for that address — on testnet, fund it with Friendbot before publishing.")}</Empty>
-      </Panel>
+      <div className="space-y-6">
+        <h1 className="text-2xl font-semibold tracking-tight">{tr("Merchant dashboard")}</h1>
+        <Panel>
+          <Empty
+            title={tr("No wallet connected")}
+            action={
+              <button
+                type="button"
+                className="btn-primary"
+                disabled={connecting}
+                onClick={() => void connect()}
+              >
+                {connecting ?tr("Connecting…") :tr("Connect wallet")}
+              </button>
+            }
+          >{tr("Connect the wallet that will publish plans. Plans, subscribers and revenue are all read for that address — on testnet, fund it with Friendbot before publishing.")}</Empty>
+        </Panel>
+      </div>
     );
   }
 
   return (
     <div className="space-y-6">
+      <h1 className="text-2xl font-semibold tracking-tight">{tr("Merchant dashboard")}</h1>
       <SectionShortcuts />
       {onboardingDismissed === false && (
         <OnboardingChecklist
@@ -2123,11 +2128,7 @@ export default function MerchantPage() {
         <Stat
           label={tr("Collected")}
           loading={summary === null}
-          value={
-            summary?.totalCollected
-              ? formatTokenValue(summary.totalCollected, 4, tokenMeta.decimals)
-              : "—"
-          }
+          value={<Money amount={summary?.totalCollected} meta={tokenMeta} digits={4} />}
           hint={tr("{0}, net of protocol fee", { "0": tokenMeta.symbol })}
         />
         <Stat

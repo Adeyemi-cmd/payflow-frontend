@@ -1227,26 +1227,30 @@ function AccountInner() {
 
   if (!viewAddress) {
     return (
-      <Panel title={tr("My account")}>
-        <Empty
-          title={tr("No wallet connected")}
-          action={
-            <button
-              type="button"
-              className="btn-primary"
-              disabled={connecting}
-              onClick={() => void connect()}
-            >
-              {connecting ?tr("Connecting…") :tr("Connect wallet")}
-            </button>
-          }
-        >{tr("Connect a wallet to see your vault balance, fund it, and manage your subscriptions. Nothing is sent to the network until you approve a transaction in your wallet.")}</Empty>
-      </Panel>
+      <div className="space-y-6">
+        <h1 className="text-2xl font-semibold tracking-tight">{tr("My account")}</h1>
+        <Panel>
+          <Empty
+            title={tr("No wallet connected")}
+            action={
+              <button
+                type="button"
+                className="btn-primary"
+                disabled={connecting}
+                onClick={() => void connect()}
+              >
+                {connecting ?tr("Connecting…") :tr("Connect wallet")}
+              </button>
+            }
+          >{tr("Connect a wallet to see your vault balance, fund it, and manage your subscriptions. Nothing is sent to the network until you approve a transaction in your wallet.")}</Empty>
+        </Panel>
+      </div>
     );
   }
 
   return (
     <div className="space-y-6">
+      <h1 className="text-2xl font-semibold tracking-tight">{tr("My account")}</h1>
       {isReadOnly && (
         <div
           role="status"
