@@ -807,7 +807,5 @@ export function Dialog({
   );
 }
 
-export { SyncLagIndicator } from "./SyncLagIndicator";
-export { Money } from "./Money";
-export { NotificationCentre } from "./NotificationCentre";
+
 
