@@ -16,6 +16,9 @@ export function Panel({
   subtitle,
   children,
   actions,
+  onMouseEnter,
+  onFocus,
+  onFocusCapture,
 }: {
   /** Optional DOM id, e.g. an anchor target for in-page links. */
   id?: string;
@@ -23,6 +26,9 @@ export function Panel({
   subtitle?: string;
   children: ReactNode;
   actions?: ReactNode;
+  onMouseEnter?: () => void;
+  onFocus?: () => void;
+  onFocusCapture?: () => void;
 }) {
   const { t: tr } = useI18n();
   const titleId = useId();
@@ -30,6 +36,9 @@ export function Panel({
     <section
       className="panel"
       id={id}
+      onMouseEnter={onMouseEnter}
+      onFocus={onFocus}
+      onFocusCapture={onFocusCapture}
       // Naming the section after its heading lets screen-reader users jump
       // between the panels of a long page (a plan card, a form, a table)
       // instead of hearing one undifferentiated run of content.

@@ -6,6 +6,7 @@ import SubscribePage from "@/app/subscribe/page";
 import AccountPage from "@/app/account/page";
 import MerchantPage from "@/app/merchant/page";
 import StatusPage from "@/app/status/page";
+import NotFound from "@/app/not-found";
 import { Activity } from "@/components/Activity";
 import { CohortRetentionTable } from "@/components/CohortRetentionTable";
 import { WalletButton } from "@/components/WalletButton";
@@ -155,5 +156,10 @@ describe("French on the four main pages", () => {
     render(<App><WalletButton /></App>);
     expect(await screen.findByText("Reconnexion requise")).toBeTruthy();
     expect(screen.getByRole("button", { name: "Reconnecter la session du portefeuille" })).toBeTruthy();
+
+    cleanup();
+    render(<App><NotFound /></App>);
+    await screen.findByText("Page introuvable");
+    expect(screen.queryByText("Page not found")).toBeNull();
   });
 });
