@@ -25,6 +25,7 @@ import {
   SkeletonPlanCards,
   TxLink,
 } from "@/components/ui";
+import { Money } from "@/components/Money";
 
 /**
  * The public catalogue a merchant can link to: `/m/?address=G…` lists that
@@ -56,7 +57,7 @@ function usePrefetchRouter() {
 }
 
 function MerchantCatalogue() {
-  const { t: tr, formatPeriod, translateMessage, formatTokenValue } = useI18n();
+  const { t: tr, formatPeriod, translateMessage } = useI18n();
   const params = useSearchParams();
   const merchant = merchantFromParam(params.get("address"));
   const { address, networkMismatch, signXdr } = useWallet();
@@ -196,10 +197,7 @@ function MerchantCatalogue() {
                 <div className="space-y-3">
                   <div>
                     <div className="text-2xl font-semibold tabular-nums">
-                      {formatTokenValue(plan.amount, 4, meta.decimals)}{" "}
-                      <span className="text-sm font-normal text-muted">
-                        {meta.symbol}
-                      </span>
+                      <Money amount={plan.amount} meta={meta} digits={4} />
                     </div>
                     <div className="text-sm text-muted">
                       {formatPeriod(plan.period)}

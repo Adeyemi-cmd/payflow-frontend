@@ -7,6 +7,7 @@ import { useReducedMotion } from "@/lib/useReducedMotion";
 import { useId, useMemo, useState } from "react";
 import type { TokenMeta } from "@/lib/format";
 import { scaleSeries, toPolyline, totalNet, type BucketSize, type RevenuePoint } from "@/lib/revenue";
+import { Money } from "@/components/Money";
 
 /**
  * Net revenue over time, drawn with plain SVG.
@@ -49,7 +50,10 @@ export function RevenueChart({
     () => (deferVisual ? [] : scaleSeries(points, WIDTH, HEIGHT, PADDING)),
     [points, deferVisual],
   );
-  const render = useMemo(() => (value: bigint) => formatAmount(value, meta), [meta, formatAmount]);
+  const render = useMemo(
+    () => (value: bigint) => formatAmount(value, meta, meta.decimals),
+    [meta, formatAmount],
+  );
   const summary = describeSeries(points, size, render);
   const allZero = points.length > 0 && totalNet(points) === 0n;
 
@@ -143,9 +147,9 @@ export function RevenueChart({
                   <th scope="row" className="py-1.5 pr-3 font-normal" title={bucketTitle(p.start, size)}>
                     {formatBucketLabel(p.start)}
                   </th>
-                  <td className="py-1.5 pr-3 text-right">{render(p.gross)}</td>
-                  <td className="py-1.5 pr-3 text-right text-muted">{render(p.fee)}</td>
-                  <td className="py-1.5 text-right">{render(p.net)}</td>
+                  <td className="py-1.5 pr-3 text-right"><Money amount={p.gross} meta={meta} /></td>
+                  <td className="py-1.5 pr-3 text-right text-muted"><Money amount={p.fee} meta={meta} /></td>
+                  <td className="py-1.5 text-right"><Money amount={p.net} meta={meta} /></td>
                 </tr>
               ))}
             </tbody>
@@ -153,7 +157,7 @@ export function RevenueChart({
               <tr className="border-t border-edge font-medium">
                 <th scope="row" className="py-1.5 pr-3 text-left font-medium">{tr("Total")}</th>
                 <td className="sr-only" colSpan={2} />
-                <td className="py-1.5 text-right">{render(totalNet(points))}</td>
+                <td className="py-1.5 text-right"><Money amount={totalNet(points)} meta={meta} /></td>
               </tr>
             </tfoot>
           </table>
