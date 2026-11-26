@@ -15,7 +15,7 @@ import {
   type KeeperCheck,
   type RpcCheck,
 } from "@/lib/status";
-import { Notice, Panel } from "@/components/ui";
+import { Notice, Panel, TimeAgo } from "@/components/ui";
 
 /**
  * One row per check inside a panel: label on the left, value on the right,
@@ -198,12 +198,7 @@ export default function StatusPage() {
                         {keeper.lastRunAt === null ? (
                           "—"
                         ) : (
-                          <time
-                            dateTime={new Date(keeper.lastRunAt * 1000).toISOString()}
-                            title={formatExactTime(keeper.lastRunAt)}
-                          >
-                            {formatExactTime(keeper.lastRunAt)}
-                          </time>
+                          <TimeAgo value={keeper.lastRunAt} />
                         )}
                       </Row>
                       <Row label={tr("Tried / settled")}>

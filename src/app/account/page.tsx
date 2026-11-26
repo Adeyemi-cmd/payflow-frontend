@@ -1,5 +1,7 @@
 "use client";
 
+import { GracePeriodBadge } from "@/components/GracePeriodBadge";
+import { InfoTip } from "@/components/Tooltip";
 import { useI18n } from "@/i18n/provider";
 
 import { lazy, Suspense, startTransition, useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -1764,9 +1766,7 @@ function AccountInner() {
                           {resumes && (
                             <span className="text-xs text-muted">{tr("resumes")}{" "}{resumes}</span>
                           )}
-                          {pastDueUntil && (
-                            <span className="text-xs text-muted">{tr("grace period ends")}{" "}{formatDate(pastDueUntil)}</span>
-                          )}
+                          {isPastDue && <GracePeriodBadge until={pastDueUntil} />}
                           {trial && (
                             <span className="rounded-full bg-accent/15 px-2 py-0.5 text-xs font-medium text-accent">{tr("Free trial")}</span>
                           )}
@@ -2160,12 +2160,17 @@ function AccountInner() {
                   {capFor === m.id && (
                     <div className="mt-3 flex flex-wrap items-end gap-2 border-t border-edge pt-3">
                       <div className="min-w-[10rem] flex-1">
-                        <label
-                          htmlFor={`cap-${m.id}`}
-                          className="block text-xs text-muted"
-                        >
-                          Max charges (0 = unlimited)
-                        </label>
+                        <div className="flex items-center gap-1">
+                          <label
+                            htmlFor={`cap-${m.id}`}
+                            className="block text-xs text-muted"
+                          >
+                            Max charges (0 = unlimited)
+                          </label>
+                          <InfoTip label={tr("About the charge cap")}>
+                            {tr("The mandate ends by itself once this many charges have been made. It cannot be set below the charges already made.")}
+                          </InfoTip>
+                        </div>
                         <input
                           id={`cap-${m.id}`}
                           type="text"
@@ -2225,12 +2230,9 @@ function AccountInner() {
                               key={charge.due}
                               className="flex items-baseline justify-between gap-3 text-sm"
                             >
-                              <time
-                                dateTime={new Date(charge.due * 1000).toISOString()}
-                                className="text-muted"
-                              >
-                                {formatDate(charge.due)}
-                              </time>
+                              <span className="text-muted">
+                                <TimeAgo value={charge.due} />
+                              </span>
                               <span className="tabular-nums">
                                 <Money amount={charge.amount} meta={meta} />
                               </span>
@@ -2244,7 +2246,7 @@ function AccountInner() {
                             </strong>
                           </span>
                           {schedule.finalDate !== null && (
-                            <span>{tr("Final charge")}{" "}{formatDate(schedule.finalDate)}</span>
+                            <span>{tr("Final charge")}{" "}<TimeAgo value={schedule.finalDate} /></span>
                           )}
                         </div>
                         {shortfall !== null && (
