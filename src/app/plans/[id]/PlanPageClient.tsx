@@ -236,9 +236,9 @@ export function PlanPageClient({ planId }: PlanPageClientProps) {
                     <td className="py-2">
                       <AddressDisplay value={c.subscriber} />
                     </td>
-                    <td className="py-2 text-right">{c.amount}{" "}{tr("XLM")}</td>
-                    <td className="py-2 text-right">{c.fee}{" "}{tr("XLM")}</td>
-                    <td className="py-2 text-right">{c.net}{" "}{tr("XLM")}</td>
+                    <td className="py-2 text-right font-mono tabular-nums">{c.amount}{" "}{tr("XLM")}</td>
+                    <td className="py-2 text-right font-mono tabular-nums">{c.fee}{" "}{tr("XLM")}</td>
+                    <td className="py-2 text-right font-mono tabular-nums">{c.net}{" "}{tr("XLM")}</td>
                     <td className="py-2 text-right">
                       <TxLink hash={c.txHash} />
                     </td>
