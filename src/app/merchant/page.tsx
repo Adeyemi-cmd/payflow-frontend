@@ -88,6 +88,7 @@ import { Money } from "@/components/Money";
 import { NotificationCentre } from "@/components/NotificationCentre";
 import { evaluateMerchantNotifications } from "@/lib/notifications";
 import { planLink } from "@/lib/share";
+import { buildEmbedSnippet } from "@/lib/embed";
 
 function RevenueChartSkeleton() {
   const { t: tr } = useI18n();
@@ -2562,6 +2563,18 @@ export default function MerchantPage() {
                   : meta.symbol === "USDC"
                     ? formatUsdString(formatUsdcEstimate(p.amount, meta.decimals))
                     : null;
+              const planUrl = planLinks[p.id];
+              const embedSnippet = address && planUrl
+                ? buildEmbedSnippet({
+                    appOrigin: new URL(planUrl).origin,
+                    basePath: config.basePath,
+                    planId: p.id,
+                    merchant: address,
+                    name: p.name || `Plan #${p.id}`,
+                    amount: `${fromStroops(p.amount, 4, meta.decimals)} ${meta.symbol}`,
+                    period: formatPeriod(p.period),
+                  })
+                : null;
               return (
                 <div
                   key={p.id}
@@ -2652,6 +2665,7 @@ export default function MerchantPage() {
                       className="btn-ghost text-xs"
                       onClick={() => setEmbedFor(embedFor === p.id ? null : p.id)}
                       aria-expanded={embedFor === p.id}
+                      aria-controls={`plan-embed-${p.id}`}
                       aria-label={tr("Embed snippet for plan {0}", { "0": p.name || `#${p.id}` })}
                     >
                       {embedFor === p.id ?tr("Close embed") :tr("Embed")}
@@ -2770,7 +2784,12 @@ export default function MerchantPage() {
                     </div>
                   )}
                   {embedFor === p.id && (
-                    <div className="w-full mt-3 rounded-lg border border-edge bg-surface/50 p-3 text-xs space-y-2">
+                    <div
+                      id={`plan-embed-${p.id}`}
+                      role="region"
+                      aria-label={tr("Embed on your website")}
+                      className="w-full mt-3 rounded-lg border border-edge bg-surface/50 p-3 text-xs space-y-2"
+                    >
                       <div className="flex items-center justify-between">
                         <span className="font-semibold text-foreground">{tr("Embed on your website")}</span>
                         <button
@@ -2780,13 +2799,16 @@ export default function MerchantPage() {
                         >{tr("Close")}</button>
                       </div>
                       <p className="text-muted">{tr("Add this snippet to any HTML website. Subscribers can click it to subscribe in a secure popup window.")}</p>
-                      <pre className="overflow-x-auto rounded border border-edge bg-background p-2 font-mono text-[11px] text-muted">
-                        <code>{`<script src="${config.basePath}/payflow-frontend/embed/payflow-embed.js" defer></script>\n<payflow-button\n  plan-id="${p.id}"\n  merchant="${address}"\n  name="${p.name || `Plan #${p.id}`}"\n  amount="${fromStroops(p.amount, 4, meta.decimals)} ${meta.symbol}"\n  period="${formatPeriod(p.period)}">\n</payflow-button>`}</code>
-                      </pre>
-                      <CopyButton
-                        value={`<script src="${config.basePath}/payflow-frontend/embed/payflow-embed.js" defer></script>\n<payflow-button plan-id="${p.id}" merchant="${address}" name="${p.name || `Plan #${p.id}`}" amount="${fromStroops(p.amount, 4, meta.decimals)} ${meta.symbol}" period="${formatPeriod(p.period)}"></payflow-button>`}
-                        label={tr("embed snippet")}
-                      />
+                      {embedSnippet ? (
+                        <>
+                          <pre className="overflow-x-auto rounded border border-edge bg-background p-2 font-mono text-[11px] text-muted">
+                            <code>{embedSnippet}</code>
+                          </pre>
+                          <CopyButton value={embedSnippet} label={tr("embed snippet")} />
+                        </>
+                      ) : (
+                        <p role="status" className="text-muted">{tr("Preparing…")}</p>
+                      )}
                     </div>
                   )}
                 </div>

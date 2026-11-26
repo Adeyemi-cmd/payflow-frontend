@@ -86,6 +86,7 @@ jobs:
           NEXT_PUBLIC_TOKEN_ID: CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC
           NEXT_PUBLIC_API_URL: http://localhost:8080
           NEXT_PUBLIC_SITE_URL: https://mmm-pay.github.io
+      - run: npm run budget
 
   visual:
     name: visual

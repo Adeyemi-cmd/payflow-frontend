@@ -1964,24 +1964,25 @@ function AccountInner() {
                               Transfer…
                             </button>
                           ))}
-                        {nextAmount !== undefined && !isPastDue && (
-                          <button
-                            type="button"
-                            className="btn-ghost"
-                            disabled={busy !== null || networkMismatch || shortfall !== null}
+                        {shortfall !== null && !isPastDue && (
+                          <LoadingButton
+                            variant="ghost"
+                            loading={busy === `deposit-quick-${m.id}`}
+                            loadingText={tr("Depositing…")}
+                            disabled={busy !== null || networkMismatch}
                             onClick={() =>
                               void run(`deposit-quick-${m.id}`, () =>
                                 payflow.deposit(
                                   address!,
                                   signXdr,
                                   config.contracts.token,
-                                  nextAmount!,
+                                  shortfall,
                                 ),
                               )
                             }
                           >
-                            {tr("Top up")}
-                          </button>
+                            {tr("Top up")} <Money amount={shortfall} meta={meta} />
+                          </LoadingButton>
                         )}
                         {/* Offered only against a contract that carries
                             pause_until; see `pauseSupported`. */}

@@ -246,6 +246,16 @@ keys, funding test accounts, and the `NEXT_PUBLIC_E2E_WALLET` test wallet module
 
 ---
 
+## 4. Performance budgets
+
+The Lighthouse workflow measures each route listed in `lighthouserc.json` and
+fails if any route's Largest Contentful Paint exceeds 2,500 ms. Its uploaded
+reports contain the per-route measurements. The build CI job also runs
+`npm run budget`, which reports and enforces the gzip first-load JavaScript cap
+for every exported route in `js-budget.json`.
+
+---
+
 ## Which layer should I write for my change?
 
 | Your change | Recommended test layer | Key considerations |
